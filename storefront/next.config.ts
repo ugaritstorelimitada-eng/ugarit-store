@@ -40,7 +40,6 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ["lucide-react"],
   },
-  distDir: "../../.next",
 };
 
 export default nextConfig;

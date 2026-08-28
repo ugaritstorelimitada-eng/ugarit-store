@@ -3,7 +3,7 @@
   "framework": "nextjs",
   "buildCommand": "pnpm install && pnpm --filter @ugarit/storefront build",
   "installCommand": "pnpm install",
-  "outputDirectory": "storefront/.next",
+  "outputDirectory": ".next",
   "github": {
     "silent": true
   }
