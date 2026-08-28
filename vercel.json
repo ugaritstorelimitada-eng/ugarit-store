@@ -1,11 +1,12 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "pnpm install && pnpm --filter @ugarit/storefront build",
-  "devCommand": "pnpm --filter @ugarit/storefront dev",
+  "buildCommand": "next build",
+  "devCommand": "next dev",
   "installCommand": "pnpm install",
   "framework": "nextjs",
-  "outputDirectory": "storefront/.next",
+  "outputDirectory": ".next",
   "regions": ["iad1"],
+  "rootDirectory": "storefront",
   "github": {
     "silent": true
   }
