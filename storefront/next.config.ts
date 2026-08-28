@@ -1,6 +1,15 @@
 import type { NextConfig } from "next";
+import path from "path";
 
 const nextConfig: NextConfig = {
+  // Alias @/ para que funcione cuando se build desde la raíz del monorepo
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      "@": path.resolve(__dirname),
+    };
+    return config;
+  },
   // Permitir imágenes desde WordPress actual (migración gradual) y Medusa/R2
   images: {
     remotePatterns: [
