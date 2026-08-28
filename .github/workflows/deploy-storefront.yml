@@ -1,0 +1,60 @@
+name: Deploy Storefront (Vercel)
+
+# Deploy del storefront Next.js a Vercel en cada push a main.
+# Requiere el secret VERCEL_TOKEN en GitHub.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "storefront/**"
+      - "packages/**"
+      - ".github/workflows/deploy-storefront.yml"
+      - "vercel.json"
+      - "pnpm-lock.yaml"
+
+concurrency:
+  group: deploy-storefront
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy to Vercel
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.20.2"
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Pull Vercel env info
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        working-directory: storefront
+
+      - name: Build storefront (Vercel CLI)
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        working-directory: storefront
+
+      - name: Deploy to Vercel
+        id: deploy
+        run: |
+          DEPLOY_URL=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }} --yes)
+          echo "DEPLOY_URL=$DEPLOY_URL" >> $GITHUB_OUTPUT
+        working-directory: storefront
+
+      - name: Notify Slack (opcional)
+        if: success()
+        run: |
+          curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} \
+            -H 'Content-Type: application/json' \
+            -d "{\"text\": \"🟢 Storefront Ugarit desplegado: ${{ steps.deploy.outputs.DEPLOY_URL }}\"}"
+        continue-on-error: true

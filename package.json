@@ -1,0 +1,21 @@
+{
+  "name": "ugarit-store",
+  "version": "0.1.0",
+  "private": true,
+  "description": "UGARIT - Tienda online de tecnología y software en Chile. Next.js + Medusa.js stack.",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "type-check": "turbo run type-check",
+    "clean": "turbo run clean && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.0",
+    "typescript": "^5.6.3"
+  },
+  "packageManager": "pnpm@9.15.9",
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

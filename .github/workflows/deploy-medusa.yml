@@ -1,0 +1,87 @@
+name: Deploy Medusa (Railway)
+
+# Deploy del backend Medusa a Railway en cada push a main.
+# Requiere los secrets RAILWAY_TOKEN y los service IDs.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/medusa/**"
+      - "packages/**"
+      - ".github/workflows/deploy-medusa.yml"
+      - "railway.json"
+      - "nixpacks.toml"
+      - "pnpm-lock.yaml"
+
+concurrency:
+  group: deploy-medusa
+  cancel-in-progress: true
+
+jobs:
+  test-build:
+    name: Test build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.20.2"
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @ugarit/medusa type-check
+
+  deploy:
+    name: Deploy to Railway
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: test-build
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Railway CLI
+        run: npm install --global @railway/cli@latest
+
+      - name: Login to Railway
+        run: railway login --token ${{ secrets.RAILWAY_TOKEN }}
+
+      - name: Link to Medusa service
+        run: railway link ${{ secrets.RAILWAY_SERVICE_ID_MEDUSA }}
+        working-directory: apps/medusa
+
+      - name: Deploy (upstream)
+        run: railway up --service ${{ secrets.RAILWAY_SERVICE_ID_MEDUSA }} --detach
+        working-directory: apps/medusa
+
+      - name: Health check
+        run: |
+          for i in {1..10}; do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" ${{ secrets.MEDUSA_BACKEND_URL }}/health || echo "000")
+            if [ "$STATUS" = "200" ]; then
+              echo "✅ Medusa healthy: ${{ secrets.MEDUSA_BACKEND_URL }}"
+              exit 0
+            fi
+            echo "Attempt $i: status=$STATUS, retrying in 10s..."
+            sleep 10
+          done
+          echo "❌ Medusa no responde a /health"
+          exit 1
+
+      - name: Notify Slack (opcional)
+        if: always()
+        run: |
+          STATUS=${{ job.status }}
+          if [ "$STATUS" = "success" ]; then
+            curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} \
+              -H 'Content-Type: application/json' \
+              -d "{\"text\": \"🟢 Medusa Ugarit desplegado en Railway\"}"
+          else
+            curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} \
+              -H 'Content-Type: application/json' \
+              -d "{\"text\": \"🔴 Deploy de Medusa Ugarit FALLÓ\"}"
+          fi
+        continue-on-error: true

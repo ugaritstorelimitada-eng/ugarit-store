@@ -1,0 +1,74 @@
+name: DB Migrate
+
+# Ejecuta migraciones de Medusa contra la base de datos productiva.
+# Disparar manualmente desde GitHub Actions o vía curl (workflow_dispatch).
+#
+# Seguro: las migraciones de Medusa son idempotentes (no rompe si ya corrió).
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Entorno donde correr migraciones"
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+        default: staging
+      seed:
+        description: "¿Correr seed después de migrar?"
+        required: false
+        type: boolean
+        default: false
+
+concurrency:
+  group: db-migrate-${{ github.event.inputs.environment }}
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    name: Run migrations on ${{ github.event.inputs.environment }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: ${{ github.event.inputs.environment }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.20.2"
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run Medusa migrations
+        env:
+          DATABASE_URL: ${{ secrets[format('DATABASE_URL_{0}', github.event.inputs.environment)] }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          COOKIE_SECRET: ${{ secrets.COOKIE_SECRET }}
+          STORE_CORS: ${{ secrets.STORE_CORS }}
+          ADMIN_CORS: ${{ secrets.ADMIN_CORS }}
+          AUTH_CORS: ${{ secrets.AUTH_CORS }}
+        run: pnpm --filter @ugarit/medusa exec medusa db:migrate
+        working-directory: apps/medusa
+
+      - name: Run seed (opcional)
+        if: github.event.inputs.seed == 'true'
+        env:
+          DATABASE_URL: ${{ secrets[format('DATABASE_URL_{0}', github.event.inputs.environment)] }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          COOKIE_SECRET: ${{ secrets.COOKIE_SECRET }}
+        run: pnpm --filter @ugarit/medusa seed
+        working-directory: apps/medusa
+
+      - name: Notify success
+        if: success()
+        run: |
+          curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} \
+            -H 'Content-Type: application/json' \
+            -d "{\"text\": \"✅ DB migrada en ${{ github.event.inputs.environment }}\"}"
+        continue-on-error: true

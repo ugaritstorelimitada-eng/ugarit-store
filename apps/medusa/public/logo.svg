@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 60">
+  <rect x="0" y="0" width="60" height="60" rx="10" fill="#1e40af"/>
+  <text x="50%" y="68%" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="32" font-weight="800" fill="#ffffff">U</text>
+  <text x="74" y="44" font-family="Inter, system-ui, sans-serif" font-size="32" font-weight="700" fill="#0f172a">GARIT</text>
+  <text x="74" y="44" font-family="Inter, system-ui, sans-serif" font-size="32" font-weight="700" fill="#1e40af" dx="-6">U</text>
+</svg>
