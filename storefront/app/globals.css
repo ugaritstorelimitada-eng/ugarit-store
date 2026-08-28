@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * UGARIT · Design tokens
+ *
+ * Light theme corporativo con acento ESET Green.
+ * Slate-50 base, surfaces white, focus ring verde.
+ */
+@layer base {
+  :root {
+    /* Surfaces */
+    --background: 210 40% 98%;       /* #F8FAFC slate-50 */
+    --foreground: 222 47% 11%;       /* #0F172A slate-900 */
+    --card: 0 0% 100%;               /* #FFFFFF */
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    /* Primary: ESET Green */
+    --primary: 173 100% 33%;         /* #00A88F */
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary: slate-100 */
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+
+    /* Muted */
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    /* Accent: ESET light */
+    --accent: 173 60% 95%;
+    --accent-foreground: 173 100% 22%;
+
+    /* Destructive */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Borders & rings */
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 173 100% 33%;
+
+    --radius: 0.625rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
+  }
+}
+
+/* Utilidades */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  /* Gradiente corporativo (logo UGARIT) */
+  .bg-brand-gradient {
+    background: linear-gradient(135deg, #1e3a8a 0%, #0ea5e9 100%);
+  }
+  /* Gradiente ESET (CTA destacados) */
+  .bg-eset-gradient {
+    background: linear-gradient(135deg, #00A88F 0%, #006B5C 100%);
+  }
+}
+
+/* Animación del punto pulsante "Abierto 24/7" */
+@keyframes pulse-green {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(22, 163, 74, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
+}
+.pulse-dot {
+  width: 6px;
+  height: 6px;
+  background: #16A34A;
+  border-radius: 50%;
+  animation: pulse-green 1.5s infinite;
+}
