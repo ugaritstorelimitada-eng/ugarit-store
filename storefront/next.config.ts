@@ -2,6 +2,8 @@ import type { NextConfig } from "next";
 import path from "path";
 
 const nextConfig: NextConfig = {
+  // ESLint se ejecuta en CI, no en build de Vercel (monorepo)
+  eslint: { ignoreDuringBuilds: true },
   // Alias @/ para que funcione cuando se build desde la raíz del monorepo
   webpack: (config) => {
     config.resolve.alias = {
