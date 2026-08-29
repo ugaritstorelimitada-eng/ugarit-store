@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ProductCard } from "@/components/storefront/product-card"
 import { ValuePropsStrip } from "@/components/storefront/value-props"
+import { HeroBannerSlider } from "@/components/storefront/hero-banner-slider"
 import { SITE } from "@/lib/constants"
 import {
   getFeaturedProducts,
@@ -19,46 +20,8 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col">
-      {/* Hero — compacto, foco en el mensaje y CTAs */}
-      <section className="relative bg-gradient-to-br from-ugarit-50 via-background to-eset-50/30 border-b">
-        <div className="container py-10 md:py-14">
-          <div className="max-w-3xl space-y-5">
-            <Badge variant="secondary" className="text-xs">
-              <Sparkles className="h-3 w-3 mr-1" />
-              Tienda oficial · {SITE.region_label}
-            </Badge>
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight text-balance">
-              Ciberseguridad y Software{" "}
-              <span className="text-eset-700">para tu negocio</span>
-            </h1>
-            <p className="text-base md:text-lg text-muted-foreground max-w-2xl text-balance">
-              Licencias originales de ESET, Microsoft, Adobe y más. Hardware certificado,
-              servicio técnico profesional y entrega digital 24/7.
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <Button size="lg" className="bg-eset-600 hover:bg-eset-700 text-white" asChild>
-                <Link href="/tienda">
-                  Ver toda la tienda <ArrowRight className="h-4 w-4" />
-                </Link>
-              </Button>
-              <Button size="lg" variant="outline" asChild>
-                <Link href="/software/eset">
-                  <Shield className="h-4 w-4" />
-                  Ciberseguridad ESET
-                </Link>
-              </Button>
-            </div>
-            <div className="flex flex-wrap gap-x-6 gap-y-2 pt-2 text-xs text-muted-foreground">
-              <span className="flex items-center gap-1.5">
-                <Zap className="h-3.5 w-3.5 text-amber-600" />
-                Entrega digital 24/7
-              </span>
-              <span>· Distribuidor Autorizado ESET</span>
-              <span>· Convenio Mercado Público</span>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Hero Banner Slider — full width retail */}
+      <HeroBannerSlider />
 
       {/* Trust strip — 4 pilares */}
       <ValuePropsStrip />
