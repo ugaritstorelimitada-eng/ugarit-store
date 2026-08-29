@@ -14,7 +14,23 @@ import { z } from "zod"
 import FacturapiService from "../../../services/facturapi.service"
 import { cleanRut, isValidRut } from "@ugarit/shared-types"
 
-// ─── Schemas de webhook ──────────────────────────────────────────────────────
+// ─── Tipos internos ─────────────────────────────────────────────────────────
+
+interface MercadoPagoPayer {
+  email?: string
+  first_name?: string
+  last_name?: string
+}
+
+interface MercadoPagoBody {
+  action: string
+  status?: string
+  "data.id"?: string
+  external_reference?: string
+  amount?: number
+  payer?: MercadoPagoPayer
+  [key: string]: unknown
+}
 
 const WebpayWebhookSchema = z.object({
   order_id: z.string(),
@@ -129,7 +145,7 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
 
   // ── Mercado Pago ──
   if (isMercadoPago) {
-    const data = body as { action: string; status: string }
+    const data = body as MercadoPagoBody
 
     // Solo procesar cuando el pago está aprobado
     if (data.status !== "approved") {
@@ -159,15 +175,15 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
           giro: "",
           direccion: "",
           comuna: "",
-          email: (body.payer?.email as string) ?? "",
+          email: data.payer?.email ?? "",
         },
         items: [],
         subtotal: 0,
         tax: 0,
-        total: (body.amount as number) ?? 0,
+        total: data.amount ?? 0,
         paymentMethod: "mercadopago",
-        customerEmail: (body.payer?.email as string) ?? "",
-        customerName: (body.payer?.first_name as string) ?? "",
+        customerEmail: data.payer?.email ?? "",
+        customerName: data.payer?.first_name ?? "",
       })
 
       console.log(`[Webhook] DTE emitido via Mercado Pago: ${dteRecord.id}`)

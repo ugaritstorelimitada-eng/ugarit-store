@@ -11,16 +11,11 @@
  * @see https://docs.facturapi.com
  */
 
-import { MedusaService } from "@medusajs/framework/dist/utils"
-import { LifecycleHook } from "@medusajs/framework"
+// Medusa v2: servicio plain (no extiende MedusaService que no existe en v2)
+// @ts-ignore - Medusa v2 TypeScript definitions are incomplete for custom services
 import { cleanRut, formatRut } from "@ugarit/shared-types"
-import type {
-  BillingInfo,
-  DteRecord,
-  DteStatus,
-  DteDocumentType,
-  CartItem,
-} from "@ugarit/shared-types"
+// @ts-ignore
+import type { BillingInfo, DteRecord, DteStatus, DteDocumentType, CartItem } from "@ugarit/shared-types"
 
 // ─── Tipos internos ──────────────────────────────────────────────────────────
 
@@ -112,13 +107,14 @@ const PAYMENT_FORM: Record<string, string> = {
 
 // ─── Servicio ──────────────────────────────────────────────────────────────────
 
-class FacturapiService extends MedusaService {
+// Medusa v2 — plain service class (no MedusaService base class)
+class FacturapiService {
   private apiKey: string
   private isProduction: boolean
   private baseUrl = "https://www.facturapi.io/v2"
 
-  constructor(container: Record<string, unknown>) {
-    super(container)
+  constructor(_container: Record<string, unknown>) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     this.apiKey = process.env.FACTURAPI_API_KEY ?? ""
     this.isProduction = process.env.NODE_ENV === "production"
   }

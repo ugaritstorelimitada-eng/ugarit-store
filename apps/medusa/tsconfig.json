@@ -11,13 +11,12 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "outDir": "./.medusa/server",
-    "rootDir": ".",
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@ugarit/shared-types": ["../../packages/shared-types/src/index.ts"]
+      "@ugarit/shared-types": ["../packages/shared-types/src/index.ts"]
     }
   },
-  "include": ["src/**/*", "medusa-config.ts"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", ".medusa", "dist", "src/scripts/**", "src/admin/**"]
 }

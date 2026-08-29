@@ -5,7 +5,7 @@
  */
 
 import { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
-import FacturapiService from "../../../../services/facturapi.service"
+import FacturapiService from "../../../services/facturapi.service"
 
 export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
   const { dteId } = req.params as { dteId?: string }

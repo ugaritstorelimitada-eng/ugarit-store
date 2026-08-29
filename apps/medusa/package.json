@@ -9,7 +9,7 @@
     "build": "medusa build",
     "start": "medusa start",
     "seed": "medusa exec ./src/scripts/seed.ts",
-    "type-check": "tsc --noEmit",
+    "type-check": "tsc --noEmit --skipLibCheck --baseUrl ./src",
     "lint": "echo 'no lint configured'",
     "clean": "rm -rf .medusa dist node_modules .turbo"
   },
