@@ -1,10 +1,18 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
-  "buildCommand": "cd storefront && pnpm install --include=dev && next build",
-  "installCommand": "pnpm install --frozen-lockfile",
-  "outputDirectory": "storefront/.next",
+  "rootDirectory": "storefront",
+  "buildCommand": "pnpm install && pnpm build",
+  "outputDirectory": ".next",
   "github": {
     "silent": true
-  }
+  },
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store" }
+      ]
+    }
+  ]
 }
