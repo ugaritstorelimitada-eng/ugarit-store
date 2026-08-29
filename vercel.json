@@ -1,9 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
-  "rootDirectory": "storefront",
-  "buildCommand": "pnpm install && pnpm build",
-  "outputDirectory": ".next",
+  "buildCommand": "pnpm install --frozen-lockfile && pnpm --filter @ugarit/storefront build",
+  "installCommand": "pnpm install --frozen-lockfile",
+  "outputDirectory": "storefront/.next",
   "github": {
     "silent": true
   },
