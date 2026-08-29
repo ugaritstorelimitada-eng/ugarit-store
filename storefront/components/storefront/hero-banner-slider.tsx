@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { ChevronLeft, ChevronRight, ShieldCheck, ArrowRight, Zap, Building2 } from "lucide-react"
+import { ChevronLeft, ChevronRight, ShieldCheck, ArrowRight, Building2 } from "lucide-react"
 
 interface Slide {
   id: number
@@ -131,8 +131,8 @@ export function HeroBannerSlider() {
               Licencias originales
             </span>
             <span className="flex items-center gap-1">
-              <Zap className="h-3.5 w-3.5 text-amber-500" />
-              Entrega en segundos
+              <ShieldCheck className="h-3.5 w-3.5 text-blue-500" />
+              Factura inmediata
             </span>
           </div>
         </div>
